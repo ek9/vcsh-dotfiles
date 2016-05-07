@@ -1,0 +1,9 @@
+## ek9/vcs-dotfiles - https://github.com/ek9/vcsh-dotfiles
+## vcsh-dotfiles
+## mr config for vcsh-dotfiles
+[.config/mr/repo.d/vcsh-dotfiles]
+checkout = vcsh clone https://github.com/ek9/vcsh-dotfiles &&
+    cd vcsh-dotfiles &&
+    bash .local/bin/vcsh-dotfiles
+
+

@@ -1,0 +1,11 @@
+## ek9/vcsh-dotfiles - https://github.com/ek9/vcsh-dotfiles
+## .mrconfig
+
+[DEFAULT]
+git_gc = git gc "$@"
+jobs = 5
+# only update once every 12 hours
+skip = [ "$1" = update ] && ! hours_since "$1" 12
+
+# include config.d and groups.d files that repositories can add
+include = cat ~/.config/mr/{config.d,groups.d}/*
