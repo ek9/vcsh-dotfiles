@@ -30,7 +30,7 @@ script in [vdemeester/vcsh-home][3] project.
 
 ## Install
 
-TBA
+    $ curl https://raw.githubusercontent.com/ek9/vcsh-dotfiles/vcsh-dotfiles | bash
 
 ## Compatible Repositories
 

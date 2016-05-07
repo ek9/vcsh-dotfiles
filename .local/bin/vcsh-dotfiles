@@ -106,7 +106,7 @@ install_mr() {
 }
 
 # *setup_vcsh_hooks* : sets up base vcsh hooks
-setup_vcsh_hooks() {
+setup_vcsh_dotfiles() {
     # * Look at ``HOOK_D`` and ``HOOK_A`` variable if already defined
     test -z "$HOOK_D" && HOOK_D=$HOME/.config/vcsh/hooks-enabled
     test -z "$HOOK_A" && HOOK_A=$HOME/.config/vcsh/hooks-available
@@ -140,6 +140,11 @@ setup_vcsh_hooks() {
 	$(cd $HOOK_D && ln -sf $HOOK_A/* .)
 	log "Making sure all hooks are executable"
 	chmod +x $HOOK_A/*
+
+    log "Installing vcsh-dotfiles to local bin dir"
+    cp $TMP_DIR/vcsh-dotfiles $HOMEBIN/vcsh-dotfiles
+    log "Making vcsh-dotfiles eecutable"
+    chmod +x $HOMEBIN/vcsh-dotfiles
 }
 
 log "Checking needed commands :$(tput bold)"
@@ -155,7 +160,7 @@ echo "$SELF: bootstrapping vcsh-dotfiles with '$HTTP_GET'"
 setup_local_bin
 install_vcsh
 install_mr
-setup_vcsh_hooks
+setup_vcsh_dotfiles
 exit 1
 vcsh_root='https://raw.githubusercontent.com/vdemeester/vcsh-home/master'
 
