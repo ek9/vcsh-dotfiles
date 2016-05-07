@@ -10,8 +10,7 @@
 
 ## Overview
 #
-## - Automatically download and setup `vcsh` and `mr` by fetching files from
-##   GitHub.
+## - Automatically download and setup `vcsh` and `mr`.
 ## - Sets up `.local/bin` for local binaries and shell scripts (added to `PATH`)
 ## - vcsh hooks setup to:
 ##    - Enable sparse checkout for cloned repositories
@@ -24,8 +23,15 @@
 ##    - `.config/mr/groups.d` (for groups - dependencies and vcsh repository)).
 ##  This allows any repositories to extend `mr` configuration. See README.md for
 ##  more information.
-SELF="$(basename $0)"
 set -e
+test -z "$HOME" && fatal '$HOME not set; exiting' 1
+test -z "$USER" && fatal '$USER not set; exiting' 1
+
+SELF="$(basename $0)"
+VCSH_URL="https://raw.githubusercontent.com/RichiH/vcsh/master/vcsh"
+MR_URL="https://git.joeyh.name/git/myrepos.git/"
+HOMEBIN="$HOME/.local/bin"
+TMP_DIR="/tmp/vcsh-dotfiles-$USER"
 
 ## Functions
 # *log*: a wrapper of echo to print stuff in a more colorful way
@@ -66,132 +72,88 @@ check_cmd() {
         exit 1
     }
 }
+setup_local_bin() {
+    # enable local bin dir
+    [[ ! -d "$HOMEBIN" ]] && mkdir -p $HOMEBIN && echo made $HOMEBIN
+    # append $HOMEBIN to PATH if directory exists and it is not yet in PATH
+    if [[ $UID -ge 1000 ]] && [[ -d $HOMEBIN ]] && [[ -z $(echo $PATH | grep -o $HOMEBIN) ]]; then
+        export PATH=$PATH:$HOMEBIN && "added $HOMEBIN to path"
+        return
+    fi
 
+    echo local bin directory $HOMEBIN is setup and in PATH
+}
 # *install_vcsh* : install vcsh via github
 install_vcsh() {
-
+    check_cmd vcsh && echo vcsh is already installed && return
+    echo installing vcsh via $HTTP_GET $VCSH_URL
+    $(cd $HOMEBIN && $HTTP_GET $VCSH_URL && chmod +x $HOMEBIN/vcsh)
 }
 
 # *install_mr* : install vcsh via git
 install_mr() {
-
+    check_cmd mr && echo mr is already installed && return
+    echo installing mr via git $MR_URL
+    [[ -d "/tmp/myrepos-$USER" ]] && rm -rf "/tmp/myrepos-$USER"
+    git clone https://git.joeyh.name/git/myrepos.git/ /tmp/myrepos-$USER
+    cp /tmp/myrepos-$USER/mr $HOMEBIN/
+    chmod +x $HOMEBIN/mr
 }
 
-# First, we check the precense of essential tools (git, vcsh, mr)
+# *setup_vcsh_hooks* : sets up base vcsh hooks
+setup_vcsh_hooks() {
+    # * Look at ``HOOK_D`` and ``HOOK_A`` variable if already defined
+    test -z "$HOOK_D" && HOOK_D=$HOME/.config/vcsh/hooks-enabled
+    test -z "$HOOK_A" && HOOK_A=$HOME/.config/vcsh/hooks-available
+    log "Setting up vcsh hooks:\n   Available hooks : $HOOK_A\n   Enabled hooks   : $HOOK_D"
+    # * Create hook directories
+    test -d "$HOOK_D" || mkdir -p "$HOOK_D"
+    test -d "$HOOK_A" || mkdir -p "$HOOK_A"
+
+    if ! -f "$HOOK_D/pre-merge.00-backupOriginalFiles" ||
+		! -f "$HOOK_D/pre-upgrade.00-checkSparseCheckout" ||
+		! -f "$HOOK_D/pre-upgrade.01-defaultsparsecheckout" ||
+		! -f "$HOOK_D/pre-upgrade.02-GitignoresparseCheckout" ||
+		! -f "$HOOK_D/pre-upgrade.02-GitignoresparseCheckout" ||
+		! -f "$HOOK_D/pre-upgrade.02-LICENSEsparseCheckout" ||
+		! -f "$HOOK_D/pre-upgrade.02-READMEsparseCheckout" ||
+		! -f "$HOOK_D/pre-upgrade.03-buildsparseCheckout" ; then
+
+		log "Cloning vcsh-dotfiles to $TMP_DIR"
+		test -d "$TMP_DIR" && rm -rf "$TMP_DIR"
+		git clone https://github.com/ek9/vcsh-dotfiles $TMP_DIR
+		HOOK_SRC_DIR=$TMP_DIR/.config/vcsh/hooks-available
+		log "Copying all hooks from $HOOK_SRC_DIR/* to $HOOK_A/"
+		cp $HOOK_SRC_DIR/* $HOOK_A/
+		log "Making sure all hooks are executable"
+		chmod +x $HOOK_a/*
+		log "Enabling all hooks via symlink"
+		$(cd $HOOK_D && ln -sf $HOOK_A/* .)
+	else
+		echo "vcsh hooks are already setup"
+	fi
+}
+
 log "Checking needed commands :$(tput bold)"
 check_cmd git
 
-test -z "$HOME" && fatal '$HOME not set; exiting' 1
-
-mkdir $HOME/tmp
-cd $HOME/tmp
 
 test -z "$HTTP_GET" && command -v wget >/dev/null && HTTP_GET='wget -nv'
 test -z "$HTTP_GET" && command -v curl >/dev/null && HTTP_GET='curl -s -S -O'
 test -z "$HTTP_GET" && fatal 'Unable to find wget or curl'
 
-echo "$SELF: bootstrapping vcsh and mr with '$HTTP_GET'"
+echo "$SELF: bootstrapping vcsh-dotfiles with '$HTTP_GET'"
 
+setup_local_bin
+install_vcsh
+install_mr
+setup_vcsh_hooks
+exit 1
 vcsh_root='https://raw.githubusercontent.com/vdemeester/vcsh-home/master'
-
-echo $HTTP_GET $vcsh_root/bin/vcsh
-$HTTP_GET $vcsh_root/bin/vcsh
-echo $HTTP_GET $vcsh_root/bin/mr
-$HTTP_GET $vcsh_root/bin/mr
-
-chmod 755 mr vcsh
 
 cd $HOME
 
-export PATH=$HOME/tmp:$PATH
 
-# Next, we'll prepare for the initial bootstrap. It is basically :
-# * Look at ``HOOK_D`` and ``HOOK_A`` variable if already defined
-test -z "$HOOK_D" && HOOK_D=$HOME/.config/vcsh/hooks-enabled
-test -z "$HOOK_A" && HOOK_A=$HOME/.config/vcsh/hooks-available
-log "Preparing bootstrap:\n   Available hooks : $HOOK_A\n   Enabled hooks   : $HOOK_D"
-# * Create folder if not present
-test -d $HOOK_D || mkdir -p $HOOK_D
-test -d $HOOK_A || mkdir -p $HOOK_A
-# * Write initial vcsh hooks (to enable sparseCheckout and to ignore README)
-log "Writing initial hooks: $(tput bold)"
-# vcsh hook for enabling [sparseCheckout](http://www.kernel.org/pub/software/scm/git/docs/git-read-tree.html#_sparse_checkout).
-# > "Sparse checkout" allows populating the working directory sparsely. It uses the skip-worktree bit (see git-update-index(1)) to tell Git whether a file in the working directory is worth looking at.
-#
-# This is very useful for the vcsh-enabled repository. I can document them with
-# a README file so that other people can know what it does, but I don't want
-# them to conflict when beeing used.
-name="pre-upgrade.00-checkSparseCheckout"
-cat > $HOOK_A/$name << HOOK
-#!/bin/sh
-if ! test "\$(git config core.sparseCheckout)" = "true"; then
-    git config core.sparseCheckout true
-fi
-HOOK
-ln -s $HOOK_A/$name $HOOK_D/$name
-chmod +x $HOOK_A/$name
-echo "   $name"
-# vcsh hook for excluding README{,.md} using git sparseCheckout
-name="pre-upgrade.01-defaultsparsecheckout"
-cat > $HOOK_A/$name << HOOK
-#!/bin/sh
-if ! test $(grep $name \$GIT_DIR/info/sparse-checkout); then
-    cat >> \$GIT_DIR/info/sparse-checkout << EOF
-#/ from $name
-*
-EOF
-fi
-HOOK
-chmod +x $HOOK_A/$name
-ln -s $HOOK_A/$name $HOOK_D/$name
-echo "   $name"
-# vcsh hook for excluding README{,.md} using git sparseCheckout
-name="pre-upgrade.02-READMEsparseCheckout"
-cat > $HOOK_A/$name << HOOK
-#!/bin/sh
-if ! test $(grep $name \$GIT_DIR/info/sparse-checkout); then
-    cat >> \$GIT_DIR/info/sparse-checkout << EOF
-#/ from $name
-!README
-!README.md
-!README.org
-EOF
-fi
-HOOK
-chmod +x $HOOK_A/$name
-ln -s $HOOK_A/$name $HOOK_D/$name
-echo "   $name"
-# vcsh hook for excluding .gitignore using git sparseCheckout
-name="pre-upgrade.02-GitignoresparseCheckout"
-cat > $HOOK_A/$name << HOOK
-#!/bin/sh
-if ! test $(grep $name \$GIT_DIR/info/sparse-checkout); then
-    cat >> \$GIT_DIR/info/sparse-checkout << EOF
-#/ from $name
-!.gitignore
-EOF
-fi
-HOOK
-chmod +x $HOOK_A/$name
-ln -s $HOOK_A/$name $HOOK_D/$name
-echo "   $name"
-# vcsh hook for excluding .gitignore using git sparseCheckout
-name="pre-upgrade.03-buildsparseCheckout"
-cat > $HOOK_A/$name << HOOK
-#!/bin/sh
-if ! test $(grep $name \$GIT_DIR/info/sparse-checkout); then
-    cat >> \$GIT_DIR/info/sparse-checkout << EOF
-#/ from $name
-!Dockerfile
-!Dockerfile*
-!circle.yml
-!.travis.yml
-EOF
-fi
-HOOK
-chmod +x $HOOK_A/$name
-ln -s $HOOK_A/$name $HOOK_D/$name
-echo "   $name"
 echo "$(tput sgr0)"
 
 # * Clean some stuff (backup)
