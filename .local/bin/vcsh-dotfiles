@@ -1,0 +1,185 @@
+#!/usr/bin/env sh
+## ek9/vcsh-doftiles - https://github.com/ek9/vcsh-dotfiles
+## vcsh-dotfiles
+## vcsh-dotfiles is a generic script which aims to simplify managing your
+## dotfiles by setting up useful hooks for vcsh and configuring mr to be
+## extendable.
+#
+## It is inspired by the bootstrap script by Vincend Demeester at
+## https://github.com/vdemeester/vcsh-home/blob/bootstrap/bootstrap.sh
+
+## Overview
+#
+## - Automatically download and setup `vcsh` and `mr`.
+## - Sets up `.local/bin` for local binaries and shell scripts (added to `PATH`)
+## - vcsh hooks setup to:
+##    - Enable sparse checkout for cloned repositories
+##    - Ignore `README` and other common development files when cloning
+##    - Make backup copies of files that would be overwritten when cloning.
+##    - Repositories can have `.gitignore` files stored
+##      in `.gitignore.d/<repo-name>` of every repository
+## - mr `.mrconfig` setup to source files in:
+##    - `.config/mr/config.d` (for single vcsh repositories)
+##    - `.config/mr/groups.d` (for groups - dependencies and vcsh repository)).
+##  This allows any repositories to extend `mr` configuration. See README.md for
+##  more information.
+set -e
+test -z "$HOME" && fatal '$HOME not set; exiting' 1
+test -z "$USER" && fatal '$USER not set; exiting' 1
+
+SELF="$(basename $0)"
+SELF_URL="https://github.com/ek9/vcsh-dotfiles"
+VCSH_URL="https://raw.githubusercontent.com/RichiH/vcsh/master/vcsh"
+MR_URL="https://git.joeyh.name/git/myrepos.git/"
+HOMEBIN="$HOME/.local/bin"
+TMP_DIR="/tmp/vcsh-dotfiles-$USER"
+
+## Functions
+# *log*: a wrapper of echo to print stuff in a more colorful way
+log() {
+    ECHO_ARGS=""
+    test "$1" = "-n" && {
+        ECHO_ARGS="-n"
+        shift
+    }
+    echo $ECHO_ARGS "$(tput sgr0)$(tput setaf 2)>$(tput bold)>$(tput sgr0) $*"
+}
+# *warn*: a wrapper of echo to print stuff in a more colorful way, warning
+warn() {
+    test "$1" = "-n" && {
+        ECHO_ARGS="-n"
+        shift
+    }
+    echo $ECHO_ARGS "$(tput sgr0)$(tput setaf 3)<$(tput bold)<$(tput sgr0) $*"
+}
+# *fatal*: a wrapper of echo to print stuff in a more colorful way, error
+fatal () {
+    test "$1" = "-n" && {
+        ECHO_ARGS="-n"
+        shift
+    }
+    echo $ECHO_ARGS "$(tput sgr0)$(tput setaf 9)<$(tput bold)<$(tput sgr0) $*" >&2
+    exit $2
+}
+
+# *check_cmd* : check a command and fail if not present
+check_cmd() {
+    command -v $1 >/dev/null && {
+        echo "   $1"
+    } || {
+        echo ""
+        warn "$1 is not available"
+        echo
+        exit 1
+    }
+}
+setup_local_bin() {
+    # enable local bin dir
+    [[ ! -d "$HOMEBIN" ]] && mkdir -p $HOMEBIN && echo made $HOMEBIN
+    # append $HOMEBIN to PATH if directory exists and it is not yet in PATH
+    if [[ $UID -ge 1000 ]] && [[ -d $HOMEBIN ]] && [[ -z $(echo $PATH | grep -o $HOMEBIN) ]]; then
+        export PATH=$PATH:$HOMEBIN && "added $HOMEBIN to path"
+        return
+    fi
+
+    echo local bin directory $HOMEBIN is setup and in PATH
+}
+# *install_vcsh* : install vcsh via github
+install_vcsh() {
+    check_cmd vcsh && echo vcsh is already installed && return
+    echo installing vcsh via $HTTP_GET $VCSH_URL
+    $(cd $HOMEBIN && $HTTP_GET $VCSH_URL && chmod +x $HOMEBIN/vcsh)
+}
+
+# *install_mr* : install vcsh via git
+install_mr() {
+    check_cmd mr && echo mr is already installed && return
+    echo installing mr via git $MR_URL
+    test -d "/tmp/myrepos-$USER" && rm -rf "/tmp/myrepos-$USER"
+    git clone "$MR_URL" "/tmp/myrepos-$USER"
+    cp "/tmp/myrepos-$USER/mr" "$HOMEBIN/"
+    chmod +x "$HOMEBIN/mr"
+}
+
+# *setup_vcsh_hooks* : sets up base vcsh hooks
+setup_vcsh_hooks() {
+    # * Look at ``HOOK_D`` and ``HOOK_A`` variable if already defined
+    test -z "$HOOK_D" && HOOK_D=$HOME/.config/vcsh/hooks-enabled
+    test -z "$HOOK_A" && HOOK_A=$HOME/.config/vcsh/hooks-available
+    log "Setting up vcsh hooks:\n   Available hooks : $HOOK_A\n   Enabled hooks   : $HOOK_D"
+    # * Create hook directories
+    test -d "$HOOK_D" || mkdir -p "$HOOK_D"
+    test -d "$HOOK_A" || mkdir -p "$HOOK_A"
+
+    if ! -f "$HOOK_D/pre-merge.00-backupOriginalFiles" ||
+		! -f "$HOOK_D/pre-upgrade.00-checkSparseCheckout" ||
+		! -f "$HOOK_D/pre-upgrade.01-defaultsparsecheckout" ||
+		! -f "$HOOK_D/pre-upgrade.02-GitignoresparseCheckout" ||
+		! -f "$HOOK_D/pre-upgrade.02-GitignoresparseCheckout" ||
+		! -f "$HOOK_D/pre-upgrade.02-LICENSEsparseCheckout" ||
+		! -f "$HOOK_D/pre-upgrade.02-READMEsparseCheckout" ||
+		! -f "$HOOK_D/pre-upgrade.03-buildsparseCheckout" ; then
+
+		log "Cloning vcsh-dotfiles to $TMP_DIR"
+		test -d "$TMP_DIR" && rm -rf "$TMP_DIR"
+		git clone $SELF_URL $TMP_DIR
+		HOOK_SRC_DIR=$TMP_DIR/.config/vcsh/hooks-available
+		log "Copying all hooks from $HOOK_SRC_DIR/* to $HOOK_A/"
+		cp $HOOK_SRC_DIR/* $HOOK_A/
+		log "Making sure all hooks are executable"
+		chmod +x $HOOK_a/*
+		log "Enabling all hooks via symlink"
+		$(cd $HOOK_D && ln -sf $HOOK_A/* .)
+	else
+		echo "vcsh hooks are already setup"
+	fi
+}
+
+log "Checking needed commands :$(tput bold)"
+check_cmd git
+
+
+test -z "$HTTP_GET" && command -v wget >/dev/null && HTTP_GET='wget -nv'
+test -z "$HTTP_GET" && command -v curl >/dev/null && HTTP_GET='curl -s -S -O'
+test -z "$HTTP_GET" && fatal 'Unable to find wget or curl'
+
+echo "$SELF: bootstrapping vcsh-dotfiles with '$HTTP_GET'"
+
+setup_local_bin
+install_vcsh
+install_mr
+setup_vcsh_hooks
+exit 1
+vcsh_root='https://raw.githubusercontent.com/vdemeester/vcsh-home/master'
+
+cd $HOME
+
+
+echo "$(tput sgr0)"
+
+# * Clean some stuff (backup)
+test -f $HOME/.profile && mv $HOME/.profile $HOME/.profile.orig
+test -f $HOME/.bashrc && mv $HOME/.bashrc $HOME/.bashrc.orig
+test -f $HOME/.bash_profile && mv $HOME/.bash_profile $HOME/.bash_profile.orig
+test -f $HOME/.bash_logout && mv $HOME/.bash_logout $HOME/.bash_logout.orig
+test -f $HOME/.zshrc && mv $HOME/.zshrc $HOME/.zshrc.orig
+test -f $HOME/.zprofile && mv $HOME/.zprofile $HOME/.zprofile.orig
+test -f $HOME/.zshenv && mv $HOME/.zshenv $HOME/.zshenv.orig
+test -f $HOME/.zlogin && mv $HOME/.zlogin $HOME/.zlogin.orig
+test -f $HOME/.zlogout && mv $HOME/.zlogout $HOME/.zlogout.orig
+
+# * Clone the vcsh-home repository
+log "Cloning vcsh-home"
+vcsh clone git://github.com/vdemeester/vcsh-home.git vcsh-home
+
+# Running mr in interactive mode on the most important one
+log "Getting sh-config first"
+vcsh  clone git://github.com/vdemeester/sh-config.git sh-config
+
+# Update in a new shell (benefits the sh-config)
+test -z "$SHELL" && SHELL=/usr/bin/zsh
+log "Updating everything in a new shell: $SHELL"
+#test -z "$SKIP_MRI" && $SHELL -c "mr -i -d .config u"
+test -z "$SKIP_MRI" && $SHELL -c "mr -d .config u"
+# Explain the user how to add configurations
+log "That's it, you're home is now configured. \n You can add or remove configuration using vcsh."

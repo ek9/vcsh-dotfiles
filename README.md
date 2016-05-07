@@ -1,41 +1,58 @@
+vcsh-dotfiles
+=============
 
-                         __           __                            
-    .--.--..----..-----.|  |--.______|  |--..-----..--------..-----.
-    |  |  ||  __||__ --||     |______|     ||  _  ||        ||  -__|
-     \___/ |____||_____||__|__|      |__|__||_____||__|__|__||_____|
+[vcsh-dotfiles][0] is a generic script which aims to simply managing your
+dotfiles by setting up useful hooks for [vcsh][1] and configuring [mr][2] to be
+extendable. This is done by laying down a basic structure that [vcsh][1]
+compatible repositories can then utilize. It is inspired by the bootstrap
+script in [vdemeester/vcsh-home][3] project.
 
+## Overview
 
-vcsh "home" repository. This repository is used with [vcsh] [1] with the default
-directory layout, powered by [mr] [2].
+- Automatically download and setup `vcsh` and `mr` by fetching files from GitHub.
+- Sets up `.local/bin` for local binaries and shell scripts (added to `PATH`)
+- [vcsh][1] hooks setup to:
+    - Enable sparse checkout for cloned repositories
+    - Ignore `README` and other common development files when cloning
+    - Make backup copies of files that would be overwritten when cloning.
+    - Repositories can have `.gitignore` files stored
+      in `.gitignore.d/<repo-name>` of every repository
+- [mr][2] `.mrconfig` setup to source files in:
+    - `.config/mr/config.d` (for single [vcsh][1] repositories)
+    - `.config/mr/groups.d` (for groups - dependencies and [vcsh][1] repository)).
+  This allows any repositories to extend `mr` configuration (see
+  [Compatible Repositories][#Compatible Repositories])
 
-> vcsh allows you to have several git repositories, all maintaining their working
-> trees in $HOME without clobbering each other. That, in turn, means you can have
-> one repository per config set (zsh, vim, ssh, etc), picking and choosing which
-> configs you want to use on which machine.
+## Requirements
 
-The default *enabled* repositories are mr (this one), sh (which contains the
-shell configuration [bash,zsh,…]) and vim.
+- curl
+- git
 
-The convention I used is the following for the vcsh/mr configuration (`.vcsh`)
-is to omit the `-config` fo the filename, e.g. `sh` = `sh-config`, … 
+## Install
 
-# Requirements
+TBA
 
-You'll have to install [mr] [2] and [vcsh] [1]. On debian the packages are
-available for sid (and sooner or later in wheezy).
+## Compatible Repositories
 
-    # apt-get install mr # vcsh
+A list of repositories compatible with [vcsh-dotfiles][0]:
 
-This repository currently depend on the `hook_support` branch of my vcsh fork
-on github. Maybe someday it'll be merged upstream. The master branch of my fork
-is merge with the `hook_support`.
+- [ek9/shell-config][10]
+- [ek9/vim-config][11]
 
-# Using it
+## Authors
 
-1. Clone it with vcsh : `vcsh clone git://github.com/vdemeester/vcsh-home.git mr`
-2. Choose the repositories you want to checkout by linking them in `config.d`
-3. Run mr to clone the repositories : `cd; mr update`
-4. You're done.
+Copyright (c) 2016 ek9 <dev@ek9.co> (https://ek9.co).
 
-[1]: https://github.com/RichiH/vcsh (vcsh)
-[2]: http://kitenet.net/~joey/code/mr/ (http://kitenet.net/~joey/code/mr/)
+Copyright (c) 2011-2015 Vincent Demeester for portions of code from
+[vdemeester/vcsh-home][3] project.
+
+## License
+
+TBA
+
+[0]: https://github.com/ek9/vcsh-dotfiles
+[1]: https://github.com/RichiH/vcsh
+[2]: https://github.com/joeyh/myrepos
+[3]: https://github.com/vdemeester/vcsh-home
+[10]: https://github.com/ek9/shell-config
+[11]: https://github.com/ek9/vim-config
