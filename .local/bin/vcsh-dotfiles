@@ -106,19 +106,21 @@ setup_vcsh_hooks() {
     # * Look at ``HOOK_D`` and ``HOOK_A`` variable if already defined
     test -z "$HOOK_D" && HOOK_D=$HOME/.config/vcsh/hooks-enabled
     test -z "$HOOK_A" && HOOK_A=$HOME/.config/vcsh/hooks-available
-    log "Setting up vcsh hooks:\n   Available hooks : $HOOK_A\n   Enabled hooks   : $HOOK_D"
+    log "Setting up vcsh hooks:"
+    log "Available hooks : $HOOK_A\n"
+    log "Enabled hooks   : $HOOK_D"
     # * Create hook directories
     test -d "$HOOK_D" || mkdir -p "$HOOK_D"
     test -d "$HOOK_A" || mkdir -p "$HOOK_A"
 
-    if ! -f "$HOOK_D/pre-merge.00-backupOriginalFiles" ||
-		! -f "$HOOK_D/pre-upgrade.00-checkSparseCheckout" ||
-		! -f "$HOOK_D/pre-upgrade.01-defaultsparsecheckout" ||
-		! -f "$HOOK_D/pre-upgrade.02-GitignoresparseCheckout" ||
-		! -f "$HOOK_D/pre-upgrade.02-GitignoresparseCheckout" ||
-		! -f "$HOOK_D/pre-upgrade.02-LICENSEsparseCheckout" ||
-		! -f "$HOOK_D/pre-upgrade.02-READMEsparseCheckout" ||
-		! -f "$HOOK_D/pre-upgrade.03-buildsparseCheckout" ; then
+    if ! -f "$HOOK_A/pre-merge.00-backupOriginalFiles" ||
+		! -f "$HOOK_A/pre-upgrade.00-checkSparseCheckout" ||
+		! -f "$HOOK_A/pre-upgrade.01-defaultsparsecheckout" ||
+		! -f "$HOOK_A/pre-upgrade.02-GitignoresparseCheckout" ||
+		! -f "$HOOK_A/pre-upgrade.02-GitignoresparseCheckout" ||
+		! -f "$HOOK_A/pre-upgrade.02-LICENSEsparseCheckout" ||
+		! -f "$HOOK_A/pre-upgrade.02-READMEsparseCheckout" ||
+		! -f "$HOOK_A/pre-upgrade.03-buildsparseCheckout" ; then
 
 		log "Cloning vcsh-dotfiles to $TMP_DIR"
 		test -d "$TMP_DIR" && rm -rf "$TMP_DIR"
@@ -126,13 +128,14 @@ setup_vcsh_hooks() {
 		HOOK_SRC_DIR=$TMP_DIR/.config/vcsh/hooks-available
 		log "Copying all hooks from $HOOK_SRC_DIR/* to $HOOK_A/"
 		cp $HOOK_SRC_DIR/* $HOOK_A/
-		log "Making sure all hooks are executable"
-		chmod +x $HOOK_a/*
-		log "Enabling all hooks via symlink"
-		$(cd $HOOK_D && ln -sf $HOOK_A/* .)
-	else
-		echo "vcsh hooks are already setup"
-	fi
+    else
+        echo "vcsh hooks are already installed"
+    fi
+
+	log "Enabling all hooks via symlink"
+	$(cd $HOOK_D && ln -sf $HOOK_A/* .)
+	log "Making sure all hooks are executable"
+	chmod +x $HOOK_A/*
 }
 
 log "Checking needed commands :$(tput bold)"
