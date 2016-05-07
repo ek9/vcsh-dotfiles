@@ -78,7 +78,11 @@ setup_local_bin() {
     [[ ! -d "$HOMEBIN" ]] && mkdir -p $HOMEBIN && echo made $HOMEBIN
     # append $HOMEBIN to PATH if directory exists and it is not yet in PATH
     if [[ $UID -ge 1000 ]] && [[ -d $HOMEBIN ]] && [[ -z $(echo $PATH | grep -o $HOMEBIN) ]]; then
-        export PATH=$PATH:$HOMEBIN && "added $HOMEBIN to path"
+        export PATH=$PATH:$HOMEBIN
+        log "added $HOMEBIN to path"
+        cat export PATH=\$PATH:$HOMEBIN >> $HOME/.profile
+        log "added PATH to $HOME/.profile"
+        log "make sure $HOME/.profile is sourced by your shell!"
         return
     fi
 
