@@ -1,0 +1,7 @@
+#!/bin/sh
+if ! test ; then
+    cat >> $GIT_DIR/info/sparse-checkout << EOF
+#/ from pre-upgrade.01-defaultsparsecheckout
+*
+EOF
+fi

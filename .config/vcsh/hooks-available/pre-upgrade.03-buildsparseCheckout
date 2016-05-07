@@ -1,0 +1,10 @@
+#!/bin/sh
+if ! test ; then
+    cat >> $GIT_DIR/info/sparse-checkout << EOF
+#/ from pre-upgrade.03-buildsparseCheckout
+!Dockerfile
+!Dockerfile*
+!circle.yml
+!.travis.yml
+EOF
+fi

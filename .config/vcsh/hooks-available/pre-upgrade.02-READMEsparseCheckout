@@ -1,0 +1,9 @@
+#!/bin/sh
+if ! test ; then
+    cat >> $GIT_DIR/info/sparse-checkout << EOF
+#/ from pre-upgrade.02-READMEsparseCheckout
+!README
+!README.md
+!README.org
+EOF
+fi

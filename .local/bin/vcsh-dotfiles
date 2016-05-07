@@ -1,25 +1,33 @@
-#!/bin/sh
-# This is my *vcsh-home* bootstrap file.
-# To make a long story short, this script will initialize my home directory
-# with share configuration in a new machine.
+#!/usr/bin/env sh
+## ek9/vcsh-doftiles - https://github.com/ek9/vcsh-dotfiles
+## vcsh-dotfiles
+## vcsh-dotfiles is a generic script which aims to simplify managing your
+## dotfiles by setting up useful hooks for vcsh and configuring mr to be
+## extendable.
 #
-# Behind the scene, there is three required peice of software (available from
-# debian repository, etc) :
-#
-# * git
-# * vcsh
-# * mr
-#
-# I use git for eveything, even my documents, pictures or music library. But
-# for these, you will need git-annex too.
-#
-SELF="$(basename $0)"
+## It is inspired by the bootstrap script by Vincend Demeester at
+## https://github.com/vdemeester/vcsh-home/blob/bootstrap/bootstrap.sh
 
-# The most important line in any shell program.
+## Overview
+#
+## - Automatically download and setup `vcsh` and `mr` by fetching files from
+##   GitHub.
+## - Sets up `.local/bin` for local binaries and shell scripts (added to `PATH`)
+## - vcsh hooks setup to:
+##    - Enable sparse checkout for cloned repositories
+##    - Ignore `README` and other common development files when cloning
+##    - Make backup copies of files that would be overwritten when cloning.
+##    - Repositories can have `.gitignore` files stored
+##      in `.gitignore.d/<repo-name>` of every repository
+## - mr `.mrconfig` setup to source files in:
+##    - `.config/mr/config.d` (for single vcsh repositories)
+##    - `.config/mr/groups.d` (for groups - dependencies and vcsh repository)).
+##  This allows any repositories to extend `mr` configuration. See README.md for
+##  more information.
+SELF="$(basename $0)"
 set -e
 
-# We will start by defining few useful functions.
-#
+## Functions
 # *log*: a wrapper of echo to print stuff in a more colorful way
 log() {
     ECHO_ARGS=""
@@ -58,6 +66,17 @@ check_cmd() {
         exit 1
     }
 }
+
+# *install_vcsh* : install vcsh via github
+install_vcsh() {
+
+}
+
+# *install_mr* : install vcsh via git
+install_mr() {
+
+}
+
 # First, we check the precense of essential tools (git, vcsh, mr)
 log "Checking needed commands :$(tput bold)"
 check_cmd git
