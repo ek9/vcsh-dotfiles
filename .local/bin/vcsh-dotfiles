@@ -28,6 +28,7 @@ test -z "$HOME" && fatal '$HOME not set; exiting' 1
 test -z "$USER" && fatal '$USER not set; exiting' 1
 
 SELF="$(basename $0)"
+SELF_URL="https://github.com/ek9/vcsh-dotfiles"
 VCSH_URL="https://raw.githubusercontent.com/RichiH/vcsh/master/vcsh"
 MR_URL="https://git.joeyh.name/git/myrepos.git/"
 HOMEBIN="$HOME/.local/bin"
@@ -94,10 +95,10 @@ install_vcsh() {
 install_mr() {
     check_cmd mr && echo mr is already installed && return
     echo installing mr via git $MR_URL
-    [[ -d "/tmp/myrepos-$USER" ]] && rm -rf "/tmp/myrepos-$USER"
-    git clone https://git.joeyh.name/git/myrepos.git/ /tmp/myrepos-$USER
-    cp /tmp/myrepos-$USER/mr $HOMEBIN/
-    chmod +x $HOMEBIN/mr
+    test -d "/tmp/myrepos-$USER" && rm -rf "/tmp/myrepos-$USER"
+    git clone "$MR_URL" "/tmp/myrepos-$USER"
+    cp "/tmp/myrepos-$USER/mr" "$HOMEBIN/"
+    chmod +x "$HOMEBIN/mr"
 }
 
 # *setup_vcsh_hooks* : sets up base vcsh hooks
@@ -121,7 +122,7 @@ setup_vcsh_hooks() {
 
 		log "Cloning vcsh-dotfiles to $TMP_DIR"
 		test -d "$TMP_DIR" && rm -rf "$TMP_DIR"
-		git clone https://github.com/ek9/vcsh-dotfiles $TMP_DIR
+		git clone $SELF_URL $TMP_DIR
 		HOOK_SRC_DIR=$TMP_DIR/.config/vcsh/hooks-available
 		log "Copying all hooks from $HOOK_SRC_DIR/* to $HOOK_A/"
 		cp $HOOK_SRC_DIR/* $HOOK_A/
