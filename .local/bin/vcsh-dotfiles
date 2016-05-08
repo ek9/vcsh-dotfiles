@@ -80,9 +80,11 @@ setup_local_bin() {
     if [[ $UID -ge 1000 ]] && [[ -d $HOMEBIN ]] && [[ -z $(echo $PATH | grep -o $HOMEBIN) ]]; then
         export PATH=$PATH:$HOMEBIN
         log "added $HOMEBIN to path"
+        test -f "$HOME/.profile" || touch "$HOME/.profile"
         cat export PATH=\$PATH:$HOMEBIN >> $HOME/.profile
-        log "added PATH to $HOME/.profile"
-        log "make sure $HOME/.profile is sourced by your shell!"
+        test -f "$HOME/.bash_profile" || touch "$HOME/.bash_profile"
+        cat export PATH=\$PATH:$HOMEBIN >> $HOME/.bash_profile
+        log "added PATH to $HOME/.profile and $HOME/.bash_profile"
         return
     fi
 
