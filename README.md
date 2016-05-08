@@ -9,32 +9,33 @@ script in [vdemeester/vcsh-home][3] project.
 
 ## Overview
 
-- Automatically download and setup `vcsh` and `mr` by fetching files from GitHub.
+- Automatically download and setup `vcsh` and `mr` by fetching files via
+  curl/wget and git.
 - Sets up `.local/bin` for local binaries and shell scripts (added to `PATH`)
 - [vcsh][1] hooks setup to:
-    - Enable sparse checkout for cloned repositories
-    - Ignore `README` and other common development files when cloning
+    - Enable sparse checkout.
+    - Ignore `README`, `LICENSE` and other common development files.
     - Make backup copies of files that would be overwritten when cloning.
     - Repositories can have `.gitignore` files stored
       in `.gitignore.d/<repo-name>` of every repository
 - [mr][2] `.mrconfig` setup to source files in:
     - `.config/mr/config.d` (for single [vcsh][1] repositories)
-    - `.config/mr/groups.d` (for groups - dependencies and [vcsh][1] repository)).
-  This allows any repositories to extend `mr` configuration (see
-  [Compatible Repositories][#Compatible Repositories])
+    - `.config/mr/groups.d` (for groups - dependencies and [vcsh][1]
+      repository)).
+  This allows any repositories to extend `mr` configuration further.
 
 ## Requirements
 
-- curl
-- git
+- `curl` or `wget`
+- `git`
 
 ## Install
 
-    $ curl https://raw.githubusercontent.com/ek9/vcsh-dotfiles/vcsh-dotfiles | bash
+Install `vcsh-dotfiles` and run it to bootstrap itself:
 
-## Compatible Repositories
+    $ curl https://raw.githubusercontent.com/ek9/vcsh-dotfiles/.local/bin/vcsh-dotfiles | bash
 
-A list of repositories compatible with [vcsh-dotfiles][0]:
+Most vcsh repositories should be compatible with this format. Examples:
 
 - [ek9/shell-config][10]
 - [ek9/vim-config][11]
