@@ -33,7 +33,7 @@ script in [vdemeester/vcsh-home][3] project.
 
 Install `vcsh-dotfiles` and run it to bootstrap itself:
 
-    $ curl https://raw.githubusercontent.com/ek9/vcsh-dotfiles/.local/bin/vcsh-dotfiles | bash
+    $ curl https://raw.githubusercontent.com/ek9/vcsh-dotfiles/master/.local/bin/vcsh-dotfiles | bash
 
 Most vcsh repositories should be compatible with this format. Examples:
 
