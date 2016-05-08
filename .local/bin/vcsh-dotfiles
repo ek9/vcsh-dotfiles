@@ -81,9 +81,9 @@ setup_local_bin() {
         export PATH=$PATH:$HOMEBIN
         log "added $HOMEBIN to path"
         test -f "$HOME/.profile" || touch "$HOME/.profile"
-        cat export PATH=\$PATH:$HOMEBIN >> $HOME/.profile
+        echo "export PATH=\$PATH:$HOMEBIN" >> $HOME/.profile
         test -f "$HOME/.bash_profile" || touch "$HOME/.bash_profile"
-        cat export PATH=\$PATH:$HOMEBIN >> $HOME/.bash_profile
+        echo "export PATH=\$PATH:$HOMEBIN" >> $HOME/.bash_profile
         log "added PATH to $HOME/.profile and $HOME/.bash_profile"
         return
     fi
@@ -92,14 +92,12 @@ setup_local_bin() {
 }
 # *install_vcsh* : install vcsh via github
 install_vcsh() {
-    check_cmd vcsh && echo vcsh is already installed && return
     echo installing vcsh via $HTTP_GET $VCSH_URL
     $(cd $HOMEBIN && $HTTP_GET $VCSH_URL && chmod +x $HOMEBIN/vcsh)
 }
 
 # *install_mr* : install vcsh via git
 install_mr() {
-    check_cmd mr && echo mr is already installed && return
     echo installing mr via git $MR_URL
     test -d "/tmp/myrepos-$USER" && rm -rf "/tmp/myrepos-$USER"
     git clone "$MR_URL" "/tmp/myrepos-$USER"
