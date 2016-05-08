@@ -142,7 +142,7 @@ setup_vcsh_dotfiles() {
 	chmod +x $HOOK_A/*
 
     log "Installing vcsh-dotfiles to local bin dir"
-    cp $TMP_DIR/vcsh-dotfiles $HOMEBIN/vcsh-dotfiles
+    cp $TMP_DIR/.local/bin/vcsh-dotfiles $HOMEBIN/vcsh-dotfiles
     log "Making vcsh-dotfiles eecutable"
     chmod +x $HOMEBIN/vcsh-dotfiles
 }
@@ -161,37 +161,32 @@ setup_local_bin
 install_vcsh
 install_mr
 setup_vcsh_dotfiles
-exit 1
-vcsh_root='https://raw.githubusercontent.com/vdemeester/vcsh-home/master'
+check_cmd vcsh
+check_cmd git
+check_cmd vcsh-dotfiles
 
-cd $HOME
-
-
-echo "$(tput sgr0)"
+log "vcsh-dotfiles setup is DONE!"
 
 # * Clean some stuff (backup)
-test -f $HOME/.profile && mv $HOME/.profile $HOME/.profile.orig
-test -f $HOME/.bashrc && mv $HOME/.bashrc $HOME/.bashrc.orig
-test -f $HOME/.bash_profile && mv $HOME/.bash_profile $HOME/.bash_profile.orig
-test -f $HOME/.bash_logout && mv $HOME/.bash_logout $HOME/.bash_logout.orig
-test -f $HOME/.zshrc && mv $HOME/.zshrc $HOME/.zshrc.orig
-test -f $HOME/.zprofile && mv $HOME/.zprofile $HOME/.zprofile.orig
-test -f $HOME/.zshenv && mv $HOME/.zshenv $HOME/.zshenv.orig
-test -f $HOME/.zlogin && mv $HOME/.zlogin $HOME/.zlogin.orig
-test -f $HOME/.zlogout && mv $HOME/.zlogout $HOME/.zlogout.orig
+#test -f $HOME/.profile && mv $HOME/.profile $HOME/.profile.orig
+#test -f $HOME/.bashrc && mv $HOME/.bashrc $HOME/.bashrc.orig
+#test -f $HOME/.bash_profile && mv $HOME/.bash_profile $HOME/.bash_profile.orig
+#test -f $HOME/.bash_logout && mv $HOME/.bash_logout $HOME/.bash_logout.orig
+#test -f $HOME/.zshrc && mv $HOME/.zshrc $HOME/.zshrc.orig
+#test -f $HOME/.zprofile && mv $HOME/.zprofile $HOME/.zprofile.orig
+#test -f $HOME/.zshenv && mv $HOME/.zshenv $HOME/.zshenv.orig
+#test -f $HOME/.zlogin && mv $HOME/.zlogin $HOME/.zlogin.orig
+#test -f $HOME/.zlogout && mv $HOME/.zlogout $HOME/.zlogout.orig
+
+cd $HOME
+echo "$(tput sgr0)"
 
 # * Clone the vcsh-home repository
-log "Cloning vcsh-home"
-vcsh clone git://github.com/vdemeester/vcsh-home.git vcsh-home
+log "Cloning vcsh-dotfiles via vcsh as 'vcsh-dotfiles'"
+vcsh clone $SELF_URL vcsh-dotfiles
 
 # Running mr in interactive mode on the most important one
-log "Getting sh-config first"
-vcsh  clone git://github.com/vdemeester/sh-config.git sh-config
-
-# Update in a new shell (benefits the sh-config)
-test -z "$SHELL" && SHELL=/usr/bin/zsh
-log "Updating everything in a new shell: $SHELL"
-#test -z "$SKIP_MRI" && $SHELL -c "mr -i -d .config u"
-test -z "$SKIP_MRI" && $SHELL -c "mr -d .config u"
+test -z "$SKIP_MRI" && $SHELL -c "mr update"
 # Explain the user how to add configurations
-log "That's it, you're home is now configured. \n You can add or remove configuration using vcsh."
+log "vcsh-dotfiles setup has been correctly initialized."
+log "You should now have vcsh, mr and vcsh-dotfiles setup"
