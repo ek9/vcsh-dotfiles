@@ -75,7 +75,7 @@ check_cmd() {
 }
 setup_local_bin() {
     # enable local bin dir
-    [[ ! -d "$HOMEBIN" ]] && mkdir -p $HOMEBIN && echo made $HOMEBIN
+    test -d "$HOMEBIN" || (mkdir -p $HOMEBIN && echo made $HOMEBIN)
     # append $HOMEBIN to PATH if directory exists and it is not yet in PATH
     if [[ $UID -ge 1000 ]] && [[ -d $HOMEBIN ]] && [[ -z $(echo $PATH | grep -o $HOMEBIN) ]]; then
         export PATH=$PATH:$HOMEBIN
