@@ -3,7 +3,7 @@
 !/.config/mr/config.d
 !/.config/mr/config.d/vcsh-dotfiles
 !/.config/mr/groups.d
-!/.config/mr/groups.d/.gitkeep
+!/.config/mr/groups.d/vcsh-dotfiles
 !/.config/vcsh
 !/.config/vcsh/hooks-available
 !/.config/vcsh/hooks-available/pre-merge.00-backupOriginalFiles
