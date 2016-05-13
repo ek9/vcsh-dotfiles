@@ -1,7 +1,7 @@
 ## ek9/vcsh-dotfiles - https://github.com/ek9/vcsh-dotfiles
 ## vcsh-dotfiles
 ## mr config for vcsh-dotfiles
-[.config/vcsh/repo.d/vcsh-dotfiles]
+[.config/vcsh/repo.d/vcsh-dotfiles.git]
 checkout = vcsh clone https://github.com/ek9/vcsh-dotfiles &&
     chmod +x ~/.local/bin/vcsh-dotfiles
 
