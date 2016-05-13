@@ -183,3 +183,4 @@ log "You should now have csh-dotfiles setup via vcsh and mr."
 log "Running 'mr update' to verify"
 mr update
 log "vcsh-dotfiles has been successfully setup."
+log "Make sure to source .profile or .bash_profile or restart your shell"
