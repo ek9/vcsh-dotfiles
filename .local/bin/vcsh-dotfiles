@@ -157,7 +157,7 @@ install_mr
 setup_vcsh_dotfiles
 check_cmd vcsh
 check_cmd git
-check_cmd vcsh-dotfiles
+check_cmd mr
 
 export PATH=$PATH:$HOMEBIN
 log "vcsh-dotfiles setup is DONE!"
