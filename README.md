@@ -19,9 +19,7 @@ script in [vdemeester/vcsh-home][3] project.
     - Repositories can have `.gitignore` files stored
       in `.gitignore.d/<repo-name>` of every repository
 - [mr][2] `.mrconfig` setup to source files in:
-    - `.config/mr/config.d` (for single [vcsh][1] repositories)
-    - `.config/mr/groups.d` (for groups - dependencies and [vcsh][1]
-      repository)).
+    - `.config/mr/config.d` (for [vcsh][1] repositories)
   This allows any repositories to extend `mr` configuration further.
 
 ## Requirements
