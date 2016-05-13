@@ -139,20 +139,6 @@ setup_vcsh_dotfiles() {
 	$(cd $HOOK_D && ln -sf $HOOK_A/* .)
 	log "Making sure all hooks are executable"
 	chmod +x $HOOK_A/*
-
-    log "Installing vcsh-dotfiles to local bin dir"
-    cp $TMP_DIR/.local/bin/vcsh-dotfiles $HOMEBIN/vcsh-dotfiles
-
-    log "Making vcsh-dotfiles executable"
-    chmod +x $HOMEBIN/vcsh-dotfiles
-
-    log "Copying .mrconfig and vcsh-dotfiles"
-    cp $TMP_DIR/.mrconfig $HOME/.mrconfig
-    cp $TMP_DIR/.config/mr/config.d/vcsh-dotfiles $HOME/.config/mr/config.d/vcsh-dotfiles
-
-    log "Running mr update"
-    mr update
-
 }
 
 log "Checking needed commands :$(tput bold)"
@@ -191,5 +177,9 @@ cd $HOME
 echo "$(tput sgr0)"
 
 # Explain the user how to add configurations
-log "vcsh-dotfiles setup has been correctly initialized."
-log "You should now have vcsh, mr and vcsh-dotfiles setup"
+log "vcsh-dotfiles will now self-bootstrap via vcsh and update via mr"
+vcsh clone $SELF_URL vcsh-dotfiles
+log "You should now have csh-dotfiles setup via vcsh and mr."
+log "Running 'mr update' to verify"
+mr update
+log "vcsh-dotfiles has been successfully setup."
