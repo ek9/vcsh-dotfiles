@@ -165,7 +165,7 @@ cmd_verify() {
     check_cmd mr
     check_cmd vcsh-dotfiles
     export PATH=$PATH:$HOMEBIN
-    log "vcsh-dotfiles setup is verified as done"
+    log "vcsh-dotfiles setup is verified!"
 }
 
 # *cmd_install* : install vcsm, mr and vcsh-dotfiles
