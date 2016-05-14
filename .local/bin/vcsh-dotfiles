@@ -81,6 +81,7 @@ check_cmd() {
     }
 }
 setup_local_bin() {
+    test -f "$HOME/.profile" && source "$HOME/.profile"
     # enable local bin dir
     test -d "$HOMEBIN" || (mkdir -p $HOMEBIN && echo made $HOMEBIN)
     # append $HOMEBIN to PATH if directory exists and it is not yet in PATH
