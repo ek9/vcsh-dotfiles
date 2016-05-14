@@ -12,7 +12,6 @@
 #
 ## install          install vcsh, mr and vcsh-dotfiles (bootstrap)
 ## verify           verify vcsh-dotfiles setup
-## update           update vcsh-dotfiles
 ##
 ## help             show help
 
@@ -167,13 +166,20 @@ cmd_verify() {
     check_cmd mr
     check_cmd vcsh-dotfiles
     export PATH=$PATH:$HOMEBIN
-    log "vcsh-dotfiles setup is DONE!"
-
-
+    log "vcsh-dotfiles setup is verified as done"
 }
 
 # *cmd_install* : install vcsm, mr and vcsh-dotfiles
 cmd_install() {
+    log "Checking needed commands :$(tput bold)"
+    check_cmd git
+
+    test -z "$HTTP_GET" && command -v wget >/dev/null && HTTP_GET='wget -nv'
+    test -z "$HTTP_GET" && command -v curl >/dev/null && HTTP_GET='curl -s -S -O'
+    test -z "$HTTP_GET" && fatal 'Unable to find wget or curl'
+
+    echo "$SELF: bootstrapping vcsh-dotfiles with '$HTTP_GET'"
+
     setup_local_bin
     install_vcsh
     install_mr
@@ -192,10 +198,17 @@ cmd_install() {
     mr update
     log "vcsh-dotfiles has been successfully setup."
     log "Make sure to 'source .profile' or restart your shell"
+
+    cd $HOME
+    echo "$(tput sgr0)"
+
 }
 
 ## CLI Arguments
-test -z $@ && cmd_help && exit 1
+if [ $# -eq 0 ]; then
+    cmd_help
+    exit 1
+fi
 for i in "$@"
 do
     case $i in
@@ -204,9 +217,6 @@ do
             ;;
         verify)
             cmd_verify
-            ;;
-        update)
-            cmd_update
             ;;
         help)
             cmd_help
@@ -218,23 +228,5 @@ do
             ;;
     esac
 done
-
-exit 1
-
-log "Checking needed commands :$(tput bold)"
-check_cmd git
-
-
-test -z "$HTTP_GET" && command -v wget >/dev/null && HTTP_GET='wget -nv'
-test -z "$HTTP_GET" && command -v curl >/dev/null && HTTP_GET='curl -s -S -O'
-test -z "$HTTP_GET" && fatal 'Unable to find wget or curl'
-
-echo "$SELF: bootstrapping vcsh-dotfiles with '$HTTP_GET'"
-
-cmd_install
-cmd_verify
-
-cd $HOME
-echo "$(tput sgr0)"
 
 
