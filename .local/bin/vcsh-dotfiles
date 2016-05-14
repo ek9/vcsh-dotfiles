@@ -8,6 +8,14 @@
 ## It is inspired by the bootstrap script by Vincend Demeester at
 ## https://github.com/vdemeester/vcsh-home/blob/bootstrap/bootstrap.sh
 
+## Commands
+#
+## install          install vcsh, mr and vcsh-dotfiles (bootstrap)
+## verify           verify vcsh-dotfiles setup
+## update           update vcsh-dotfiles
+##
+## help             show help
+
 ## Overview
 #
 ## - Automatically download and setup `vcsh` and `mr`.
@@ -26,6 +34,7 @@ set -e
 test -z "$HOME" && fatal '$HOME not set; exiting' 1
 test -z "$USER" && fatal '$USER not set; exiting' 1
 
+## Variables
 SELF="$(basename $0)"
 SELF_URL="https://github.com/ek9/vcsh-dotfiles"
 VCSH_URL="https://raw.githubusercontent.com/RichiH/vcsh/master/vcsh"
@@ -141,6 +150,77 @@ setup_vcsh_dotfiles() {
 	chmod +x $HOOK_A/*
 }
 
+# *cmd_help* : shows help message
+cmd_help() {
+    log "Commands"
+    log ""
+    log "install          install vcsh, mr and vcsh-dotfiles (bootstrap)"
+    log "verify           verify vcsh-dotfiles setup"
+    log "update           update vcsh-dotfiles"
+    log "help             show help"
+}
+
+# *cmd_verify* : verifies that vcsh, mr and vcsh-dotfiles is setup
+cmd_verify() {
+    log "Verifying vcsh-dotfiles setup"
+    check_cmd vcsh
+    check_cmd mr
+    check_cmd vcsh-dotfiles
+    export PATH=$PATH:$HOMEBIN
+    log "vcsh-dotfiles setup is DONE!"
+
+
+}
+
+# *cmd_install* : install vcsm, mr and vcsh-dotfiles
+cmd_install() {
+    setup_local_bin
+    install_vcsh
+    install_mr
+    setup_vcsh_dotfiles
+
+    # Explain the user how to add configurations
+    if ! test -f "$HOME/.config/mr/config.d/vcsh-dotfiles.vcsh"; then
+        log "vcsh-dotfiles will now self-bootstrap via vcsh and update via mr"
+        vcsh clone $SELF_URL vcsh-dotfiles
+        log "You should now have csh-dotfiles setup via vcsh and mr."
+    else
+        log "vcsh-dotfiles is already configued via mr and vcsh."
+    fi
+
+    log "Running 'mr update' to verify"
+    mr update
+    log "vcsh-dotfiles has been successfully setup."
+    log "Make sure to 'source .profile' or restart your shell"
+}
+
+## CLI Arguments
+test -z $@ && cmd_help && exit 1
+for i in "$@"
+do
+    case $i in
+        install)
+            cmd_install
+            ;;
+        verify)
+            cmd_verify
+            ;;
+        update)
+            cmd_update
+            ;;
+        help)
+            cmd_help
+            ;;
+        *)
+            cmd_help
+            echo ""
+            fatal "Unknown command: $i"
+            ;;
+    esac
+done
+
+exit 1
+
 log "Checking needed commands :$(tput bold)"
 check_cmd git
 
@@ -151,36 +231,10 @@ test -z "$HTTP_GET" && fatal 'Unable to find wget or curl'
 
 echo "$SELF: bootstrapping vcsh-dotfiles with '$HTTP_GET'"
 
-setup_local_bin
-install_vcsh
-install_mr
-setup_vcsh_dotfiles
-check_cmd vcsh
-check_cmd git
-check_cmd mr
-
-export PATH=$PATH:$HOMEBIN
-log "vcsh-dotfiles setup is DONE!"
-
-# * Clean some stuff (backup)
-#test -f $HOME/.profile && mv $HOME/.profile $HOME/.profile.orig
-#test -f $HOME/.bashrc && mv $HOME/.bashrc $HOME/.bashrc.orig
-#test -f $HOME/.bash_profile && mv $HOME/.bash_profile $HOME/.bash_profile.orig
-#test -f $HOME/.bash_logout && mv $HOME/.bash_logout $HOME/.bash_logout.orig
-#test -f $HOME/.zshrc && mv $HOME/.zshrc $HOME/.zshrc.orig
-#test -f $HOME/.zprofile && mv $HOME/.zprofile $HOME/.zprofile.orig
-#test -f $HOME/.zshenv && mv $HOME/.zshenv $HOME/.zshenv.orig
-#test -f $HOME/.zlogin && mv $HOME/.zlogin $HOME/.zlogin.orig
-#test -f $HOME/.zlogout && mv $HOME/.zlogout $HOME/.zlogout.orig
+cmd_install
+cmd_verify
 
 cd $HOME
 echo "$(tput sgr0)"
 
-# Explain the user how to add configurations
-log "vcsh-dotfiles will now self-bootstrap via vcsh and update via mr"
-vcsh clone $SELF_URL vcsh-dotfiles
-log "You should now have csh-dotfiles setup via vcsh and mr."
-log "Running 'mr update' to verify"
-mr update
-log "vcsh-dotfiles has been successfully setup."
-log "Make sure to source .profile or .bash_profile or restart your shell"
+
