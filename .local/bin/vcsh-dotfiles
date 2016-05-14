@@ -118,20 +118,20 @@ setup_vcsh_dotfiles() {
     test -z "$HOOK_D" && HOOK_D=$HOME/.config/vcsh/hooks-enabled
     test -z "$HOOK_A" && HOOK_A=$HOME/.config/vcsh/hooks-available
     log "Setting up vcsh hooks:"
-    log "Available hooks : $HOOK_A\n"
+    log "Available hooks : $HOOK_A"
     log "Enabled hooks   : $HOOK_D"
     # * Create hook directories
     test -d "$HOOK_D" || mkdir -p "$HOOK_D"
     test -d "$HOOK_A" || mkdir -p "$HOOK_A"
 
-    if ! -f "$HOOK_A/pre-merge.00-backupOriginalFiles" ||
-		! -f "$HOOK_A/pre-upgrade.00-checkSparseCheckout" ||
-		! -f "$HOOK_A/pre-upgrade.01-defaultsparsecheckout" ||
-		! -f "$HOOK_A/pre-upgrade.02-GitignoresparseCheckout" ||
-		! -f "$HOOK_A/pre-upgrade.02-GitignoresparseCheckout" ||
-		! -f "$HOOK_A/pre-upgrade.02-LICENSEsparseCheckout" ||
-		! -f "$HOOK_A/pre-upgrade.02-READMEsparseCheckout" ||
-		! -f "$HOOK_A/pre-upgrade.03-buildsparseCheckout" ; then
+    if [ ! -f "$HOOK_A/pre-merge.00-backupOriginalFiles" ] ||
+		[ ! -f "$HOOK_A/pre-upgrade.00-checkSparseCheckout" ] ||
+		[ ! -f "$HOOK_A/pre-upgrade.01-defaultsparsecheckout" ] ||
+		[ ! -f "$HOOK_A/pre-upgrade.02-GitignoresparseCheckout" ] ||
+		[ ! -f "$HOOK_A/pre-upgrade.02-GitignoresparseCheckout" ] ||
+		[ ! -f "$HOOK_A/pre-upgrade.02-LICENSEsparseCheckout" ] ||
+		[ ! -f "$HOOK_A/pre-upgrade.02-READMEsparseCheckout" ] ||
+		[ ! -f "$HOOK_A/pre-upgrade.03-buildsparseCheckout" ]; then
 
 		log "Cloning vcsh-dotfiles to $TMP_DIR"
 		test -d "$TMP_DIR" && rm -rf "$TMP_DIR"
@@ -155,7 +155,6 @@ cmd_help() {
     log ""
     log "install          install vcsh, mr and vcsh-dotfiles (bootstrap)"
     log "verify           verify vcsh-dotfiles setup"
-    log "update           update vcsh-dotfiles"
     log "help             show help"
 }
 
