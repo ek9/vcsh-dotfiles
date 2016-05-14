@@ -2,10 +2,8 @@ vcsh-dotfiles
 =============
 
 [vcsh-dotfiles][0] is a generic script which aims to simply managing your
-dotfiles by setting up useful hooks for [vcsh][1] and configuring [mr][2] to be
-extendable. This is done by laying down a basic structure that [vcsh][1]
-compatible repositories can then utilize. It is inspired by the bootstrap
-script in [vdemeester/vcsh-home][3] project.
+dotfiles by setting up useful hooks for [vcsh][1] and [mr][2]. It is inspired
+by the bootstrap script in [vdemeester/vcsh-home][3] repository.
 
 ## Overview
 
@@ -29,14 +27,32 @@ script in [vdemeester/vcsh-home][3] project.
 
 ## Install
 
-Install `vcsh-dotfiles` and run it to bootstrap itself:
+Run `vcsh-dotfiles install` via this one-liner:
 
     $ curl https://raw.githubusercontent.com/ek9/vcsh-dotfiles/master/.local/bin/vcsh-dotfiles | bash -s install
 
-Most vcsh repositories should be compatible with this format. Examples:
+Most vcsh repositories should be compatible with this format as it follow
+standard [vcsh][1] and [mr][2] configuration.
 
-- [ek9/shell-config][10]
-- [ek9/vim-config][11]
+## Usage
+
+`vcsh-dotfiles` supports the following commands:
+
+- `install` - used to install vcsh, mr and bootstrap vcsh-dotfiles.
+- `verify` - used to verify existing `vcsh-dotfiles` setup.
+- `help` - show help
+
+Examples:
+
+    $ vcsh-dotfiles verify
+    $ vcsh-dotfiles help
+
+## vcsh repositories
+
+Related vcsh repositories:
+
+- [ek9/shell-config][10] - bash, zsh and tmux dotfiles.
+- [ek9/vim-config][11] - vim
 
 ## Authors
 
