@@ -233,4 +233,4 @@ do
     esac
 done
 
-source .profile
+source "$HOME/.profile"
