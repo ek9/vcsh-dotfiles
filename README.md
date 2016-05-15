@@ -1,11 +1,12 @@
 vcsh-dotfiles
 =============
 
-[vcsh-dotfiles][0] is a generic script which aims to simply managing your
-dotfiles by setting up useful hooks for [vcsh][1] and [mr][2]. It is inspired
-by the bootstrap script in [vdemeester/vcsh-home][3] repository.
+[vcsh-dotfiles][0] aims to simplify the bootstrap procedure of managing your
+dotfiles with [vcsh][1].. It sets up [vcsh][1], [mr][2], adds usable hooks and
+lays down simple directory that [vcsh repos][#vcsh repositories] can follow.
+It is inspired by the bootstrap script in [vdemeester/vcsh-home][3] repository.
 
-## Overview
+## Features
 
 - Automatically download and setup `vcsh` and `mr` by fetching files via
   curl/wget and git.
