@@ -158,7 +158,7 @@ setup_vcsh_dotfiles() {
 cmd_help() {
     log "Commands"
     log ""
-    log "install          install vcsh, mr and vcsh-dotfiles (bootstrap)"
+    log "bootstrap        bootstrap vcsh, mr and vcsh-dotfiles (bootstrap)"
     log "verify           verify vcsh-dotfiles setup"
     log "help             show help"
 }
@@ -216,7 +216,7 @@ fi
 for i in "$@"
 do
     case $i in
-        install)
+        bootstrap)
             cmd_bootstrap
             ;;
         verify)

@@ -28,9 +28,9 @@ It is inspired by the bootstrap script in [vdemeester/vcsh-home][3] repository.
 
 ## Install
 
-Run `vcsh-dotfiles install` via this one-liner:
+Run `vcsh-dotfiles bootstrap` via this `curl` one-liner:
 
-    $ curl https://raw.githubusercontent.com/ek9/vcsh-dotfiles/master/.local/bin/vcsh-dotfiles | bash -s install
+    $ curl https://raw.githubusercontent.com/ek9/vcsh-dotfiles/master/.local/bin/vcsh-dotfiles | bash -s bootstrap
 
 Most vcsh repositories should be compatible with this format as it follow
 standard [vcsh][1] and [mr][2] configuration.
@@ -39,7 +39,7 @@ standard [vcsh][1] and [mr][2] configuration.
 
 `vcsh-dotfiles` supports the following commands:
 
-- `install` - used to install vcsh, mr and bootstrap vcsh-dotfiles.
+- `bootstrap` - used to bootstrap vcsh, mr and bootstrap vcsh-dotfiles.
 - `verify` - used to verify existing `vcsh-dotfiles` setup.
 - `help` - show help
 
