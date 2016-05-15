@@ -10,7 +10,7 @@
 
 ## Commands
 #
-## install          install vcsh, mr and vcsh-dotfiles (bootstrap)
+## bootstrap        bootstrap vcsh, mr and vcsh-dotfiles (bootstrap)
 ## verify           verify vcsh-dotfiles setup
 ##
 ## help             show help
@@ -80,6 +80,9 @@ check_cmd() {
         exit 1
     }
 }
+
+# *setup_local_bin* : sets up HOMEDIR and adds it to PATH, .profile,
+# .bash_profile
 setup_local_bin() {
     test -f "$HOME/.profile" && source "$HOME/.profile"
     # enable local bin dir
@@ -98,6 +101,7 @@ setup_local_bin() {
 
     echo local bin directory $HOMEBIN is setup and in PATH
 }
+
 # *install_vcsh* : install vcsh via github
 install_vcsh() {
     echo installing vcsh via $HTTP_GET $VCSH_URL
@@ -169,8 +173,8 @@ cmd_verify() {
     log "vcsh-dotfiles setup is verified!"
 }
 
-# *cmd_install* : install vcsm, mr and vcsh-dotfiles
-cmd_install() {
+# *cmd_bootstrap* : bootstrap vcsm, mr and vcsh-dotfiles
+cmd_bootstrap() {
     log "Checking needed commands :$(tput bold)"
     check_cmd git
 
@@ -213,7 +217,7 @@ for i in "$@"
 do
     case $i in
         install)
-            cmd_install
+            cmd_bootstrap
             ;;
         verify)
             cmd_verify
