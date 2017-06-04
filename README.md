@@ -80,7 +80,7 @@ Copyright (c) 2011-2015 Vincent Demeester for portions of code from
 
 ## License
 
-TBA
+TBA.
 
 [0]: https://github.com/ek9/vcsh-dotfiles
 [1]: https://github.com/RichiH/vcsh
