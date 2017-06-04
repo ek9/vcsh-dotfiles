@@ -32,8 +32,27 @@ Run `vcsh-dotfiles bootstrap` via this `curl` one-liner:
 
     $ curl https://raw.githubusercontent.com/ek9/vcsh-dotfiles/master/.local/bin/vcsh-dotfiles | bash -s bootstrap
 
+Source `~/.profile` to make sure `PATH` is updated:
+
+    $ source ~/.profile
+
+Run `mr update` to verify the boostrap:
+
+    $ mr update
+
 Most vcsh repositories should be compatible with this format as it follow
 standard [vcsh][1] and [mr][2] configuration.
+
+## vcsh repositories
+
+Related vcsh repositories:
+
+- [ek9/shell-config][10] - bash, zsh and tmux dotfiles:
+      $ vcsh clone https://github.com/ek9/shell-config
+      $ mr up
+- [ek9/vim-config][11] - vim:
+      $ vcsh clone https://github.com/ek9/vim-config
+      $ mr up
 
 ## Usage
 
@@ -47,13 +66,6 @@ Examples:
 
     $ vcsh-dotfiles verify
     $ vcsh-dotfiles help
-
-## vcsh repositories
-
-Related vcsh repositories:
-
-- [ek9/shell-config][10] - bash, zsh and tmux dotfiles.
-- [ek9/vim-config][11] - vim
 
 ## Authors
 
