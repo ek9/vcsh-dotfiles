@@ -4,5 +4,5 @@
 [.config/vcsh/repo.d/vcsh-dotfiles.git]
 checkout = vcsh clone https://github.com/ek9/vcsh-dotfiles &&
     chmod +x ~/.local/bin/vcsh-dotfiles &&
-    find .config/vcsh/hooks-available/ -name *vcsh-backup -delete
+    find ~/.config/vcsh/hooks-available/ -name *vcsh-backup -delete
 
