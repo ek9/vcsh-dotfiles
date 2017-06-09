@@ -43,9 +43,6 @@ Run `mr update` to verify the boostrap:
 
     $ mr update
 
-Most vcsh repositories should be compatible with this format as it follow
-standard [vcsh][1] and [mr][2] configuration.
-
 ## Usage
 
 You can use `vcsh-dotfiles` to clone vcsh repositories:
@@ -55,8 +52,8 @@ You can use `vcsh-dotfiles` to clone vcsh repositories:
 `vcsh-dotfiles` supports the following commands:
 
 - `bootstrap` - used to bootstrap vcsh, mr and bootstrap vcsh-dotfiles.
-- `clone` - used to clone vcsh repositories. Run `mr update` at the end. Will
-   not try to clone already cloned repository and will only run `mr update`.
+- `clone` - used to clone vcsh repositories. `mr update` is always run at the
+   end. Will not try to clone already cloned repository.
 - `verify` - used to verify existing `vcsh-dotfiles` setup.
 - `help` - show help
 
@@ -78,7 +75,7 @@ Copyright (c) 2011-2015 Vincent Demeester for portions of code from
 
 ## License
 
-**TBA**
+*TBA*
 
 [0]: https://github.com/ek9/vcsh-dotfiles
 [1]: https://github.com/RichiH/vcsh
