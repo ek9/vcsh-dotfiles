@@ -43,33 +43,28 @@ Run `mr update` to verify the boostrap:
 Most vcsh repositories should be compatible with this format as it follow
 standard [vcsh][1] and [mr][2] configuration.
 
-## vcsh repositories
-
-Related vcsh repositories:
-
-- [ek9/shell-config][10] - bash, zsh and tmux dotfiles:
-
-      vcsh clone https://github.com/ek9/shell-config
-      mr up
-      bash -i
-
-- [ek9/vim-config][11] - vim:
-
-      vcsh clone https://github.com/ek9/vim-config
-      mr up
-
 ## Usage
+
+You can use `vcsh-dotfiles` to clone vcsh repositories:
+
+    $ vcsh-dotfiles clone https://github.com/ek9/shell-config
 
 `vcsh-dotfiles` supports the following commands:
 
 - `bootstrap` - used to bootstrap vcsh, mr and bootstrap vcsh-dotfiles.
+- `clone` - used to clone vcsh repositories. Run `mr update` at the end. Will
+   not try to clone already cloned repository and will only run `mr update`.
 - `verify` - used to verify existing `vcsh-dotfiles` setup.
 - `help` - show help
 
 Examples:
 
+    $ vcsh-dotfiles clone https://github.com/ek9/shell-config
     $ vcsh-dotfiles verify
     $ vcsh-dotfiles help
+
+You can check [ek9/dotfiles][10] for various repositories that use
+[vcsh-dotfiles][0].
 
 ## Authors
 
@@ -86,5 +81,4 @@ TBA.
 [1]: https://github.com/RichiH/vcsh
 [2]: https://github.com/joeyh/myrepos
 [3]: https://github.com/vdemeester/vcsh-home
-[10]: https://github.com/ek9/shell-config
-[11]: https://github.com/ek9/vim-config
+[10]: https://github.com/ek9/dotfiles

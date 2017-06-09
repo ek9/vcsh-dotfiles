@@ -165,6 +165,8 @@ cmd_help() {
     log "Commands"
     log ""
     log "bootstrap        bootstrap vcsh, mr and vcsh-dotfiles (bootstrap)"
+    log "clone            clones mr repository and runs mr update. Skips the"
+    log "                 initial clone if repository is already cloned."
     log "verify           verify vcsh-dotfiles setup"
     log "help             show help"
 }
@@ -214,29 +216,45 @@ cmd_bootstrap() {
 
 }
 
+# *cmd_clone* : verifies that vcsh, mr and vcsh-dotfiles is setup
+cmd_clone() {
+    REPO_NAME=$(echo $1 | awk -F'/' '{print $(NF)}')
+    if [ -d "$HOME/.config/vcsh/repo.d/$REPO_NAME.git" ]; then
+        log "$REPO_NAME is already cloned"
+    else
+        log "Cloning $1"
+        (cd $HOME && vcsh clone "$1")
+    fi
+
+    log "Running mr update"
+    (cd $HOME && mr update)
+
+}
+
 ## CLI Arguments
 if [ $# -eq 0 ]; then
     cmd_help
     exit 1
 fi
-for i in "$@"
-do
-    case $i in
-        bootstrap)
-            cmd_bootstrap
-            ;;
-        verify)
-            cmd_verify
-            ;;
-        help)
-            cmd_help
-            ;;
-        *)
-            cmd_help
-            echo ""
-            fatal "Unknown command: $i"
-            ;;
-    esac
-done
+
+case $1 in
+    bootstrap)
+        cmd_bootstrap
+        ;;
+    verify)
+        cmd_verify
+        ;;
+    help)
+        cmd_help
+        ;;
+    clone)
+        cmd_clone $2
+        ;;
+    *)
+        cmd_help
+        echo ""
+        fatal "Unknown command: $i"
+        ;;
+esac
 
 source "$HOME/.profile"
