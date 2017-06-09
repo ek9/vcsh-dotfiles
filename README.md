@@ -2,9 +2,12 @@ vcsh-dotfiles
 =============
 
 [vcsh-dotfiles][0] aims to simplify the bootstrap procedure of managing your
-dotfiles with [vcsh][1].. It sets up [vcsh][1], [mr][2], adds usable hooks and
-lays down simple directory that [vcsh repos](#vcsh repositories) can follow.
+dotfiles with [vcsh][1]. It sets up [vcsh][1], [mr][2], adds usable hooks and
+lays down simple directory that vcsh repositories can follow.
+
 It is inspired by the bootstrap script in [vdemeester/vcsh-home][3] repository.
+You can check [ek9/dotfiles][10] for various repositories that use
+[vcsh-dotfiles][0].
 
 ## Features
 
@@ -75,7 +78,7 @@ Copyright (c) 2011-2015 Vincent Demeester for portions of code from
 
 ## License
 
-TBA.
+**TBA**
 
 [0]: https://github.com/ek9/vcsh-dotfiles
 [1]: https://github.com/RichiH/vcsh
