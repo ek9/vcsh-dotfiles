@@ -24,6 +24,8 @@ You can check [ek9/dotfiles][10] for various repositories that use
     - `.config/mr/config.d` (for [vcsh][1] repositories)
   This allows any repositories to extend `mr` configuration further.
 
+[![asciicast](https://asciinema.org/a/125351.png)](https://asciinema.org/a/125351)
+
 ## Requirements
 
 - `curl` or `wget`
@@ -68,7 +70,7 @@ You can check [ek9/dotfiles][10] for various repositories that use
 
 ## Authors
 
-Copyright (c) 2016 ek9 <dev@ek9.co> (https://ek9.co).
+Copyright (c) 2016-2017 ek9 <dev@ek9.co> (https://ek9.co).
 
 Copyright (c) 2011-2015 Vincent Demeester for portions of code from
 [vdemeester/vcsh-home][3] project.
