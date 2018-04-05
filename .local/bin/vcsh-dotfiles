@@ -11,6 +11,10 @@
 ## Commands
 #
 ## bootstrap        bootstrap vcsh, mr and vcsh-dotfiles (bootstrap)
+## clone            clones vcsh repository and runs update (skips clone if
+##                  already cloned and just runs update)
+## update           update vcsh and mr
+##
 ## verify           verify vcsh-dotfiles setup
 ##
 ## help             show help
@@ -110,8 +114,12 @@ setup_local_bin() {
 
 # *install_vcsh* : install vcsh via github
 install_vcsh() {
+    test -z "$HTTP_GET" && command -v wget >/dev/null && HTTP_GET='wget -nv'
+    test -z "$HTTP_GET" && command -v curl >/dev/null && HTTP_GET='curl -s -S -O'
+    test -z "$HTTP_GET" && fatal 'Unable to find wget or curl'
+
     echo installing vcsh via $HTTP_GET $VCSH_URL
-    $(cd $HOMEBIN && $HTTP_GET $VCSH_URL && chmod +x $HOMEBIN/vcsh)
+    cd $HOMEBIN && $HTTP_GET $VCSH_URL && chmod +x $HOMEBIN/vcsh
 }
 
 # *install_mr* : install vcsh via git
@@ -165,6 +173,7 @@ cmd_help() {
     log "Commands"
     log ""
     log "bootstrap        bootstrap vcsh, mr and vcsh-dotfiles (bootstrap)"
+    log "update           updates vcsh and mr"
     log "clone            clones mr repository and runs mr update. Skips the"
     log "                 initial clone if repository is already cloned."
     log "verify           verify vcsh-dotfiles setup"
@@ -216,6 +225,11 @@ cmd_bootstrap() {
 
 }
 
+cmd_update() {
+    install_mr
+    install_vcsh
+}
+
 # *cmd_clone* : verifies that vcsh, mr and vcsh-dotfiles is setup
 cmd_clone() {
     REPO_NAME=$(echo $1 | awk -F'/' '{print $(NF)}')
@@ -246,6 +260,9 @@ case $1 in
         ;;
     help)
         cmd_help
+        ;;
+    update)
+        cmd_update
         ;;
     clone)
         cmd_clone $2
