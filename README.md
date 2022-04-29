@@ -35,7 +35,7 @@ You can check [ek9/dotfiles][10] for various repositories that use
 
 Run `vcsh-dotfiles bootstrap` via this `curl` one-liner:
 
-    $ curl https://raw.githubusercontent.com/ek9/vcsh-dotfiles/master/.local/bin/vcsh-dotfiles | bash -s bootstrap
+    $ curl https://raw.githubusercontent.com/ek9/vcsh-dotfiles/main/.local/bin/vcsh-dotfiles | bash -s bootstrap
 
 Source `~/.profile` to make sure `PATH` is updated:
 
