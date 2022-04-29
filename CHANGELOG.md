@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.1.0] - 2022-04-29 (first tagged/versioned release)
 
-- Fixed bootstrap problem caused due to changed default branch name in
-  `RichiH/vcsh` (`master`->`main`)
+- Fixed vcsh bootstrap problem caused due to main branch switching to tagged
+  releases.
 - Rename project's default branch `master` to `main` + update README
 - Add a changelog + link to README
 

@@ -114,8 +114,8 @@ setup_local_bin() {
 
 # *install_vcsh* : install vcsh via github
 install_vcsh() {
-    test -z "$HTTP_GET" && command -v wget >/dev/null && HTTP_GET='wget -nv'
-    test -z "$HTTP_GET" && command -v curl >/dev/null && HTTP_GET='curl -s -S -O'
+    test -z "$HTTP_GET" && command -v wget >/dev/null && HTTP_GET='wget -O vcsh -nv'
+    test -z "$HTTP_GET" && command -v curl >/dev/null && HTTP_GET='curl -o vcsh -s -S -O'
     test -z "$HTTP_GET" && fatal 'Unable to find wget or curl'
 
     echo installing vcsh via $HTTP_GET $VCSH_URL
