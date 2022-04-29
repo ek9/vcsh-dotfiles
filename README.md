@@ -26,6 +26,10 @@ You can check [ek9/dotfiles][10] for various repositories that use
 
 [![asciicast](https://asciinema.org/a/125351.png)](https://asciinema.org/a/125351)
 
+## Change Log
+
+Please see [CHANGELOG.md](CHANGELOG.md) for information on recent changes.
+
 ## Requirements
 
 - `curl` or `wget`
