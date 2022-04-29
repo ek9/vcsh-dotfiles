@@ -40,7 +40,7 @@ test -z "$USER" && fatal '$USER not set; exiting' 1
 ## Variables
 SELF="$(basename $0)"
 SELF_URL="https://github.com/ek9/vcsh-dotfiles"
-VCSH_URL="https://raw.githubusercontent.com/RichiH/vcsh/master/vcsh"
+VCSH_URL="https://raw.githubusercontent.com/RichiH/vcsh/main/vcsh"
 MR_URL="https://git.joeyh.name/git/myrepos.git/"
 HOMEBIN="$HOME/.local/bin"
 TMP_DIR="/tmp/vcsh-dotfiles-$USER"
