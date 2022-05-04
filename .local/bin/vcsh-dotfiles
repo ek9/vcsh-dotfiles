@@ -119,7 +119,7 @@ install_vcsh() {
     test -z "$HTTP_GET" && fatal 'Unable to find wget or curl'
 
     echo installing vcsh via $HTTP_GET $VCSH_URL
-    cd $HOMEBIN && $HTTP_GET $VCSH_URL && chmod +x $HOMEBIN/vcsh
+    cd $HOMEBIN && $HTTP_GET $VCSH_URL && mv vcsh-standalone.sh vcsh && chmod +x $HOMEBIN/vcsh
 }
 
 # *install_mr* : install vcsh via git
